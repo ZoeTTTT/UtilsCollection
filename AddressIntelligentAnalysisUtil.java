@@ -18,6 +18,7 @@ public class AddressIntelligentAnalysisUtil {
     private static final String BLANK = " ";
     private static final String PHONE_NUMBER_REGEX = "([1][3-9][\\d]{9})|(0\\d{2,4}-\\d{7,8})";
     private static final String AUTONOMOUS_REGION = "自治区";
+    private static final String GUANGXI_AUTONOMOUS_REGION = "壮族自治区";
     private static final String AUTONOMOUS_PREFECTURE = "自治州";
     private static final String AUTONOMOUS_COUNTY = "自治县";
     private static final String PROVINCE = "省";
@@ -33,6 +34,8 @@ public class AddressIntelligentAnalysisUtil {
 
         String regionAreaValue, nameValue = "", phoneValue, detailAddressValue = "";
         String provinceName = "", cityName = "", countyName = "";
+
+        String provinceKeyWord = "";
 
         addressInfo = addressInfo.replaceAll(PUNCTUATION, BLANK);
         addressInfo.trim();
@@ -52,12 +55,13 @@ public class AddressIntelligentAnalysisUtil {
         List<Province> proList =
             (List<Province>) SharePreferencesUtil.getInstance().getObject(Constant.SP_KEY_PROVINCE);
         for (Province provinceObj : proList) {
-            String provinceKeyWord;
             String province = provinceObj.getName();
             if (province.contains(AUTONOMOUS_REGION)) {
                 provinceKeyWord = province.replace(AUTONOMOUS_REGION, "");
             } else if (province.contains(PROVINCE)) {
                 provinceKeyWord = province.replace(PROVINCE, "");
+            } else if (province.contains(GUANGXI_AUTONOMOUS_REGION)) {
+                provinceKeyWord = province.replace(GUANGXI_AUTONOMOUS_REGION, "");
             } else if (province.contains(CITY)) {
                 provinceKeyWord = province.replace(CITY, "");
             } else {
@@ -120,29 +124,23 @@ public class AddressIntelligentAnalysisUtil {
         }
 
         regionAreaValue = provinceName + cityName + countyName;
-        int regionIndex = addressInfo.indexOf(regionAreaValue) + regionAreaValue.length();
+        int regionIndex = addressInfo.indexOf(countyName);
 
         String[] spStringArray = addressInfo.split("\\s+");
-        if (spStringArray.length == 2) {
+        if (spStringArray.length >= 1) {
             for (String spStr : spStringArray) {
-                if (spStr.length() > 4 && !spStr.contains(regionAreaValue)) {
+                if (spStr.length() > 4 && !spStr.contains(provinceKeyWord)) {
                     detailAddressValue = spStr;
                 } else if (spStr.length() <= 4) {
                     nameValue = spStr;
                 } else {
-                    detailAddressValue = spStr.substring(regionIndex, spStr.length());
+                    if (regionIndex < spStr.length()) {
+                        detailAddressValue = spStr.substring(regionIndex, spStr.length());
+                    } else {
+                        detailAddressValue = "";
+                    }
                 }
             }
-        } else if (spStringArray.length > 2) {
-            for (String ss : spStringArray) {
-                if (ss.length() <= 4) {
-                    nameValue = ss;
-                } else if (!ss.contains(countyName)) {
-                    detailAddressValue = ss;
-                }
-            }
-        } else {
-            detailAddressValue = addressInfo.substring(regionIndex, addressInfo.length());
         }
 
         returnMap.put(Constant.MAP_KEY_PHONE_NUMBER, phoneValue);
