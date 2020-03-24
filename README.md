@@ -1,2 +1,1 @@
-# UtilsCollection
-本仓库用于存放工具性质代码
+# UtilsCollection-本仓库用于存放工具性质代码
