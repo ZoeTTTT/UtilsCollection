@@ -1,7 +1,7 @@
 ### 仿淘宝智能解析地址工具类说明文档-AddressIntelligentAnalysisUtil
 #### 1.输入参数及返回值说明</br>
 输入参数：addressInfo-指即将被解析的地址</br>
-返回值：```java Map<String,String> returanMap;```
+返回值：```java Map<String,String> returnMap;```
 ```java
 returnMap.put(Constant.MAP_KEY_PHONE_NUMBER, phoneValue); //手机号
 returnMap.put(Constant.MAP_KEY_NAME, nameValue);  //姓名
