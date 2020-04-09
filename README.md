@@ -3,4 +3,4 @@
 
 [源码](https://github.com/ZoeTTTT/UtilsCollection/blob/master/AddressIntelligentAnalysisUtil.java)
 
-### 2.仿淘宝淘口令及商品二维码画报解析识别功能
+### 2.仿淘宝淘口令及商品二维码海报解析识别功能
