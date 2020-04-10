@@ -33,16 +33,16 @@ public class DemoApplication extends Application {
             public void onActivityResumed(Activity activity) {
                 if (StringUtils.isNotEmpty(SessionUtils.getToken())) {//判断是否在登录状态
                     currentActivity = activity;
-                    Pair<Long, String> pair = ImageUtils.getLatestPhoto(mContext);
-                    String analyzedImageUrl = ImageUtils.analyzingShareResource(pair, activity);
-                    if (pic_pick == pair.first || null == analyzedImageUrl) {
-                        String analyzedKeyUrl = ImageUtils.analyzeKeyStr(activity);
-                        if (StringUtils.isNotEmpty(analyzedKeyUrl)) {
-                            createShareDialog(analyzedKeyUrl);
-                        }
+                    String analyzedKeyUrl = ImageUtils.analyzeKeyStr(activity);
+                    if (StringUtils.isNotEmpty(analyzedKeyUrl)) {
+                        createShareDialog(analyzedKeyUrl);
                     } else {
-                        pic_pick = pair.first;
-                        createShareDialog(analyzedImageUrl);
+                        Pair<Long, String> pair = ImageUtils.getLatestPhoto(mContext);
+                        String analyzedImageUrl = ImageUtils.analyzingShareResource(pair, activity);
+                        if (pic_pick != pair.first || null != analyzedImageUrl) {
+                            pic_pick = pair.first;
+                            createShareDialog(analyzedImageUrl);
+                        }
                     }
                 }
             }
