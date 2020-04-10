@@ -41,7 +41,9 @@ public class ImageUtils {
                 new CodeUtils.AnalyzeCallback() {
                     @Override
                     public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-                        url[0] = result;
+                        if (result.contains("commodity")) {
+                            url[0] = result;
+                        }
                     }
 
                     @Override
@@ -68,7 +70,9 @@ public class ImageUtils {
             if (item.getText() != null) {
                 String str = item.getText().toString();
                 if (str.contains("redfish?share")) {
-                    analyzeKeyStr = str;
+                    //todo 从analyzedKeyUrl提取口令中Api请求所需requestUrl
+                    String requestUrl = "提取口令方法";
+                    analyzeKeyStr = requestUrl;
                 }
             }
         }
