@@ -19,6 +19,7 @@ public class DemoApplication extends Application {
         mContext = getApplicationContext();
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            private int activityStartCount = 0;
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 
@@ -26,25 +27,26 @@ public class DemoApplication extends Application {
 
             @Override
             public void onActivityStarted(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityResumed(Activity activity) {
-                if (StringUtils.isNotEmpty(SessionUtils.getToken())) {//判断是否在登录状态
+                activityStartCount++;
+                if (StringUtils.isNotEmpty(SessionUtils.getToken()) && activityStartCount == 1) {//判断是否在登录状态
                     currentActivity = activity;
-                    String analyzedKeyUrl = ImageUtils.analyzeKeyStr(activity);
+                    String analyzedKeyUrl = ImageUtil.analyzeKeyStr(activity);
                     if (StringUtils.isNotEmpty(analyzedKeyUrl)) {
                         createShareDialog(analyzedKeyUrl);
                     } else {
-                        Pair<Long, String> pair = ImageUtils.getLatestPhoto(mContext);
-                        String analyzedImageUrl = ImageUtils.analyzingShareResource(pair, activity);
-                        if (pic_pick != pair.first || null != analyzedImageUrl) {
+                        Pair<Long, String> pair = ImageUtil.getLatestPhoto(mContext);
+                        String analyzedImageUrl = ImageUtil.analyzingShareResource(pair, activity);
+                        if (pic_pick != pair.first && null != analyzedImageUrl) {
                             pic_pick = pair.first;
                             createShareDialog(analyzedImageUrl);
                         }
                     }
                 }
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+               
             }
 
             @Override
@@ -54,7 +56,7 @@ public class DemoApplication extends Application {
 
             @Override
             public void onActivityStopped(Activity activity) {
-
+                activityStartCount--;
             }
 
             @Override
